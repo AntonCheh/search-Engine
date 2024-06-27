@@ -13,4 +13,9 @@ import java.util.List;
 @ConfigurationProperties(prefix = "indexing-settings")
 public class SitesList {
     private List<Site> sites;
+
+    public List<Site> getSites() {
+        return sites;    }
+
+
 }
