@@ -15,7 +15,6 @@ public class SitesList {
     private List<Site> sites;
 
     public List<Site> getSites() {
-        return sites;    }
-
-
+        return sites;
+    }
 }
