@@ -1,13 +1,12 @@
 package searchengine.services;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import java.util.List;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 import searchengine.model.Index;
 import searchengine.model.Lemma;
 import searchengine.model.Page;
+import searchengine.model.SiteTable;
 import searchengine.repositories.IndexRepository;
 import searchengine.repositories.LemmaRepository;
 import searchengine.repositories.PageRepository;
@@ -43,8 +42,8 @@ public class SearchService {
         List<Map<String, Object>> data = new ArrayList<>();
         for (Page page : pages) {
             Map<String, Object> pageData = new HashMap<>();
-            pageData.put("site", page.getSite().getUrl());
-            pageData.put("siteName", page.getSite().getName());
+            pageData.put("site", page.getSiteTable().getUrl());
+            pageData.put("siteName", page.getSiteTable().getName());
             pageData.put("uri", page.getPath());
             pageData.put("title", getTitleFromContent(page.getContent()));
             pageData.put("snippet", getSnippetFromContent(page.getContent(), lemmas));
@@ -56,7 +55,6 @@ public class SearchService {
     }
 
     private List<String> getLemmasFromQuery(String query) {
-        // Лемматизация запроса, преобразование запроса в список лемм
         return Arrays.asList(query.toLowerCase().split("\\s+"));
     }
 
@@ -66,16 +64,14 @@ public class SearchService {
 
         for (Index index : indexes) {
             Page page = index.getPage();
-            if (site == null || page.getSite().getUrl().equals(site)) {
+            if (site == null || page.getSiteTable().getUrl().equals(site)) {
                 pages.add(page);
             }
         }
 
-        // Удаление дубликатов
         Set<Page> uniquePages = new LinkedHashSet<>(pages);
         pages = new ArrayList<>(uniquePages);
 
-        // Применение offset и limit
         int toIndex = Math.min(offset + limit, pages.size());
         return pages.subList(offset, toIndex);
     }

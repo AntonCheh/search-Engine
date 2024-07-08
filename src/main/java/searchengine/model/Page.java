@@ -9,9 +9,11 @@ import javax.persistence.Index;
 @Entity
 @Getter
 @Setter
-@Table(name = "page", indexes = {
-        @Index(name = "idx_path", columnList = "path")
-})
+@Table(name = "page")
+
+//, indexes = {
+//        @Index(name = "idx_path", columnList = "path")
+//})
 public class Page {
 
     @Id
@@ -20,9 +22,9 @@ public class Page {
 
     @ManyToOne
     @JoinColumn(name = "site_id", nullable = false)
-    private Site site;
+    private SiteTable siteTable;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     private String path;
 
     @Column(nullable = false)

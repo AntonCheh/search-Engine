@@ -8,6 +8,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+@Table(name = "lemma")
 public class Lemma {
 
     @Id
@@ -16,7 +17,7 @@ public class Lemma {
 
     @ManyToOne
     @JoinColumn(name = "site_id", nullable = false)
-    private Site site;
+    private SiteTable siteTable;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     private String lemma;

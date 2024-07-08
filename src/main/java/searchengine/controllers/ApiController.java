@@ -7,8 +7,6 @@ import searchengine.services.StatisticsService;
 import searchengine.services.IndexingService;
 import searchengine.services.SearchService;
 
-
-
 import java.util.Map;
 
 @RestController

@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Table(name = "`index_table`") // Экранирование имени таблицы
+@Table(name = "table_index") // Экранирование имени таблицы
 public class Index {
 
     @Id

@@ -12,9 +12,10 @@ import java.util.List;
 @Component
 @ConfigurationProperties(prefix = "indexing-settings")
 public class SitesList {
-    private List<Site> sites;
 
-    public List<Site> getSites() {
-        return sites;
+    private List<SiteConfig> siteConfigs;
+
+    public List<SiteConfig> getSiteConfigs() {
+        return siteConfigs;
     }
 }

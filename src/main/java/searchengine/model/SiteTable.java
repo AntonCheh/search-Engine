@@ -1,6 +1,5 @@
 package searchengine.model;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-public class Site {
+@Table(name = "site")
+public class SiteTable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

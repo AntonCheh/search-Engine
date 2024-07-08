@@ -2,7 +2,7 @@ package searchengine.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import searchengine.config.Site;
+import searchengine.config.SiteConfig;
 import searchengine.config.SitesList;
 import searchengine.model.Status;
 
@@ -12,13 +12,13 @@ import java.util.concurrent.Executors;
 @Service
 public class IndexingServiceImpl implements IndexingService {
 
-    private final SitesList sites;
+    private final SitesList sitesList;
     private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private volatile boolean isIndexing = false;
 
     @Autowired
-    public IndexingServiceImpl(SitesList sites) {
-        this.sites = sites;
+    public IndexingServiceImpl(SitesList sitesList) {
+        this.sitesList = sitesList;
     }
 
     @Override
@@ -27,8 +27,8 @@ public class IndexingServiceImpl implements IndexingService {
             throw new IllegalStateException("Индексация уже запущена");
         }
         isIndexing = true;
-        for (Site site : sites.getSites()) {
-            executorService.submit(() -> indexSite(site));
+        for (SiteConfig siteConfig : sitesList.getSiteConfigs()) {
+            executorService.submit(() -> indexSite(siteConfig));
         }
     }
 
@@ -43,9 +43,9 @@ public class IndexingServiceImpl implements IndexingService {
 
     @Override
     public boolean indexPage(String url) {
-        for (Site site : sites.getSites()) {
-            if (url.startsWith(site.getUrl())) {
-                indexSitePage(site, url);
+        for (SiteConfig siteConfig : sitesList.getSiteConfigs()) {
+            if (url.startsWith(siteConfig.getUrl())) {
+                indexSitePage(siteConfig, url);
                 return true;
             }
         }
@@ -57,45 +57,45 @@ public class IndexingServiceImpl implements IndexingService {
         return isIndexing;
     }
 
-    private void indexSite(Site site) {
+    private void indexSite(SiteConfig siteConfig) {
         try {
             // Удалить данные по сайту
-            deleteSiteData(site);
+            deleteSiteData(siteConfig);
 
             // Создать запись со статусом INDEXING
-            createSiteRecord(site, Status.INDEXING);
+            createSiteRecord(siteConfig, Status.INDEXING);
 
             // Обход страниц
-            crawlSite(site);
+            crawlSite(siteConfig);
 
             // Изменить статус на INDEXED
-            updateSiteStatus(site, Status.INDEXED, null);
+            updateSiteStatus(siteConfig, Status.INDEXED, null);
         } catch (Exception e) {
-            updateSiteStatus(site, Status.FAILED, e.getMessage());
+            updateSiteStatus(siteConfig, Status.FAILED, e.getMessage());
         }
     }
 
-    private void indexSitePage(Site site, String url) {
+    private void indexSitePage(SiteConfig siteConfig, String url) {
         try {
             // Логика индексации страницы
         } catch (Exception e) {
-            updateSiteStatus(site, Status.FAILED, e.getMessage());
+            updateSiteStatus(siteConfig, Status.FAILED, e.getMessage());
         }
     }
 
-    private void deleteSiteData(Site site) {
+    private void deleteSiteData(SiteConfig siteConfig) {
         // Удаление данных из таблиц site и page
     }
 
-    private void createSiteRecord(Site site, Status status) {
+    private void createSiteRecord(SiteConfig siteConfig, Status status) {
         // Создание новой записи в таблице site
     }
 
-    private void updateSiteStatus(Site site, Status status, String error) {
+    private void updateSiteStatus(SiteConfig siteConfig, Status status, String error) {
         // Обновление статуса и времени в таблице site
     }
 
-    private void crawlSite(Site site) {
+    private void crawlSite(SiteConfig siteConfig) {
         // Обход страниц с использованием Fork-Join и JSOUP
     }
 }
